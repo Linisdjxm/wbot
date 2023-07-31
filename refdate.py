@@ -4,7 +4,6 @@ import dateparser
 import wlib
 import requests
 
-rdt = 
 URL = "https://zh.wikipedia.org/w/api.php"
 CSRF_TOKEN = rdt[0]
 S = rdt[1]
@@ -36,6 +35,7 @@ PARAMS = {
 
 R = S.get(url=URL, params=PARAMS)
 DATA = R.json()
+print(DATA)
 offsetl= 0
 while "continue" in DATA.keys():
     offsetl += limit
@@ -61,9 +61,9 @@ while "continue" in DATA.keys():
             text = re.sub(src,dateparser.parse(src).isoformat()[:-9],text)
             print(src + " --> " + dateparser.parse(src).isoformat()[:-9])
         #print(text)
-        wlib.wrwt(title,S,text,"Date Correct Test",CSRF_TOKEN)
-        break
-    break
+        wlib.wrwt(title,S,text,"Date Correct Test",CSRF_TOKEN,URL)
+        
+    
     PARAMS = {
     "action": "query",
     "format": "json",
