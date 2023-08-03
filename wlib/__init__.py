@@ -52,9 +52,8 @@ def login(lgun,lgpw,URL="https://zh.wikipedia.org/w/api.php"):
 
     CSRF_TOKEN = DATA['query']['tokens']['csrftoken']
     return [CSRF_TOKEN,S]
-
-def getwt(pagename,S,debug = 0):
-    url1 = r"https://zh.wikipedia.org/w/api.php?action=query&prop=revisions&titles="
+def getwt(pagename,S,debug = 0,URL=r"https://zh.wikipedia.org/w/api.php",URL2=r"https://zh.wikipedia.org/wiki/"):
+    url1 = URL + r"?action=query&prop=revisions&titles="
     url2 = r"&rvslots=*&rvprop=content&formatversion=2&format=json"
     try:
         html = dict((S.get(url1 + pagename + url2,headers=headers)).json())
@@ -68,14 +67,14 @@ def getwt(pagename,S,debug = 0):
         html2 = html["query"]["pages"][0]["revisions"][0]["slots"]["main"]["content"]
     except:
         try:
-            pagenamex = unquote(requests.get("https://zh.wikipedia.org/wiki/" + pagename).url[30:],'utf-8')
+            pagenamex = unquote(requests.get(URL2 + pagename).url[30:],'utf-8')
             if (debug == 2):
                 print("REDIRECT(A):" + pagenamex)
             html = dict((S.get(url1 + pagenamex + url2,headers=headers)).json())
         except ConnectionResetError:
             print("ERROR: RST")
             time.sleep(5)
-            pagenamex = unquote(requests.get("https://zh.wikipedia.org/wiki/" + pagename).url[30:],'utf-8')
+            pagenamex = unquote(requests.get(URL2 + pagename).url[30:],'utf-8')
             if (debug == 2):
                 print("REDIRECT(A):" + pagenamex)
             html = dict((S.get(url1 + pagenamex + url2,headers=headers)).json())
@@ -85,8 +84,8 @@ def getwt(pagename,S,debug = 0):
             print("ERROR: " + pagenamex)
             html2 = "NULL"
     return html2
-def dwred(title, S, debug=0):
-    url1 = r'https://zh.wikipedia.org/w/api.php?action=query&format=json&titles='
+def dwred(title, S, debug=0, URL=r"https://zh.wikipedia.org/w/api.php"):
+    url1 = URL + r'?action=query&format=json&titles='
     url2 = r'&redirects=1&formatversion=2'
     try:
         html = dict((S.get(url1 + title + url2,headers=headers)).json())
@@ -101,9 +100,9 @@ def dwred(title, S, debug=0):
     if(ntitle != title and debug != 0):
         print("REDIRECT(B): " + ntitle)
     return ntitle
-def wrwt(page,S,text,summary,CSRF_TOKEN):
-    URL = "https://zh.wikipedia.org/w/api.php"
-
+def wrwt(page,S,text,summary,CSRF_TOKEN,URL=r"https://zh.wikipedia.org/w/api.php"):
+    #URL = "https://zh.wikipedia.org/w/api.php"
+    #print(page + " EDITING STAGE 1")
     PARAMS_3 = {
     "action": "edit",
     "title": page,
@@ -111,10 +110,23 @@ def wrwt(page,S,text,summary,CSRF_TOKEN):
     "format": "json",
     "bot": True,
     "summary":summary,
-    "text": text
+    "text": text,
+    "minor": True
     }
 
-    R = S.post(URL, data=PARAMS_3)
-    DATA = R.json()
+    ct1 = 0
+    while ct1 < 4:
+        try:
+            R = S.post(URL, data=PARAMS_3, timeout=10)
+            DATA = R.json()
+            return(DATA)
+        except requests.exceptions.RequestException as e:
+            print(str(e))
+            ct1 += 1
+            print("Retry. " + str(ct1))
+    return("Error")
+    #print(page + " EDITING STAGE 1")
+
+    #DATA = R.json()
     
-    return(DATA)
+    #return(DATA)
