@@ -21,7 +21,9 @@
                 action: 'edit',
                 title: '萌娘百科_talk:讨论版/操作申请',
                 appendtext: '\n== 申请删除图片 ==\n* ' + infoB + '\n理由：' + infoA + '~~~~',
-                format: 'json'
+                format: 'json',
+                tags: 'Automation tool',
+                summary: '使用Page-In Deletion提删'
             };
             api.postWithToken( 'csrf', params ).done( function ( data ) {
                 console.log( data );
