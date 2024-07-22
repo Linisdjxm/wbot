@@ -4,7 +4,7 @@
         var portletLinkOnline = mw.util.addPortletLink(
                 'p-cactions',
                 '#',
-                'FunctionA');
+                'FunctionH');
 
         var api = new mw.Api();
 
@@ -17,7 +17,7 @@
                 format: 'json'
             };
             api.get(params).done(data => {
-                console.log(data.parse.text['*']);
+                document.getElementById('bodyContent').innerHTML = data.parse.text['*'];
             });
         });
     });
