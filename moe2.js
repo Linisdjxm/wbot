@@ -18,6 +18,7 @@
             };
             api.get(params).done(data => {
                 document.getElementById('bodyContent').innerHTML = data.parse.text['*'];
+                console.log("Success");
             });
         });
     });
