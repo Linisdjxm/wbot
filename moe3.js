@@ -16,7 +16,7 @@
                 format: 'json'
             };
             api.get(params).done(data => {
-                document.getElementById('bodyContent').innerHTML = data.parse.text['*'];
+                document.getElementById('mw-content-text').innerHTML = data.parse.text['*'];
                 console.log("Success");
             });
         }
@@ -29,7 +29,7 @@
                 format: 'json'
             };
             api.get(params).done(data => {
-                document.getElementById('bodyContent').innerHTML = data.parse.text['*'];
+                document.getElementById('mw-content-text').innerHTML = data.parse.text['*'];
                 console.log("Success");
             });
         });
