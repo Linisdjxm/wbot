@@ -1,10 +1,11 @@
 (function($, mw) {
     $(function() {
+        document.getElementById('mw-content-text').innerHTML = document.getElementById('mw-content-text').innerHTML.replace(' patroller-show','');
         // Create portlet link
         var portletLinkOnline = mw.util.addPortletLink(
                 'p-cactions',
                 '#',
-                'FunctionH');
+                '检视页面最新版本');
 
         var api = new mw.Api();
         if(document.querySelector('.' + 'permissions-errors') != null)
